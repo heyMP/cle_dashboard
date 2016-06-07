@@ -69,15 +69,31 @@ function cle_dashboard_preprocess_cle_dashboard(&$variables) {
       unset($view_results[$key]->_field_data);
       $assignments_ids[] = $result->nid;
       $assignments[$result->nid] = $result;
+
+      // Find out if the assignment is active
+      $assignment_active = null;
+      // if it has an end date
+      if (isset($result->field_field_due_date[0]['raw']['value']) && $due_date = $result->field_field_due_date[0]['raw']['value']) {
+        // if it has a beginning date
+        if (isset($result->field_field_begin_date[0]['raw']['value']) && $begin_date = $result->field_field_begin_date[0]['raw']['value']) {
+          if (time() > $begin_date && time() < $due_date) {
+            $assignment_active = TRUE;
+          }
+        }
+      }
+      $assignments[$result->nid]->active = $assignment_active;
     }
   }
 
   // Get a list of 'My Submissions'
-  $view_results = views_get_view_result('cle_dashboard_my_submissions', 'Master', $user->uid); 
+  $view_results = views_get_view_result('cle_dashboard_my_submissions', 'Master', $user->uid);
   if ($view_results) {
     // ALWAYS REMOVE THE FIELD DATA TO PREVENT DATA FROM LEAKING OUT!!!
-    foreach ($view_results as $key => $result) {
+    foreach ($view_results as $key => &$result) {
       unset($view_results[$key]->_field_data);
+      if ($result->node_created) {
+        $result->node_created = $result->node_created * 1000; 
+      }
       $my_submissions = $view_results;
     }
   }
@@ -88,6 +104,9 @@ function cle_dashboard_preprocess_cle_dashboard(&$variables) {
     // ALWAYS REMOVE THE FIELD DATA TO PREVENT DATA FROM LEAKING OUT!!!
     foreach ($view_results as $key => $result) {
       unset($view_results[$key]->_field_data);
+      if ($result->node_created) {
+        $result->node_created = $result->node_created * 1000; 
+      }
       $my_critiques = $view_results;
     }
   }

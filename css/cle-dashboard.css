@@ -2,6 +2,10 @@
   // margin: auto calc(-50vw + 55%);
 }
 
+.cle-dashboard .collapsible-header {
+  position: relative;
+}
+
 .cle-dashboard .collapsible-body {
   padding: 2em;
   background-color: #F3F3F3;
@@ -14,4 +18,17 @@
   margin: 1em;
   float: left;
   font-size: .8em;
+}
+
+.cle-dashboard .post-date {
+  color: gray;
+  font-size: .8em;
+  margin-right: .5em;
+}
+
+.cle-dashboard .secondary-content .chip {
+  margin: .3em;
+  margin-right: 0;
+  font-size: .8rem;
+  padding: 0 8px;
 }

@@ -126,3 +126,39 @@ function cle_dashboard_preprocess_cle_dashboard(&$variables) {
   drupal_add_js(array('cleDashboard' => array('assignments' => $assignments, 'submissions' => $my_submissions, 'critiques' => $my_critiques)), 'setting');
 }
 
+function cle_dashboard_menu_alter(&$items) {
+  $items['cle/critique/critique-peer/%']['access callback'][] = '_cle_dashboard_critique_peer_access_callback';
+  $items['cle/critique/critique-peer/%']['access arguments'] = array(3);
+}
+
+function _cle_dashboard_critique_peer_access_callback($assignment_id = NULL) {
+  if (_cle_dashboard_critique_date_active($assignment_id)) {
+    return TRUE;
+  }
+  else {
+    drupal_set_message('Critiques are not yet active for this assignment.', 'status', FALSE);
+    return FALSE;
+  }
+}
+
+function _cle_dashboard_critique_date_active($assignment_id) {
+  $active = FALSE;
+  $assignment = entity_load_single('node', $assignment_id); 
+  $critique_begin = strtotime($assignment->field_critique_date['und'][0]['value']);
+  $critique_end = strtotime($assignment->field_critique_date['und'][0]['value2']);
+  
+  // if there is no end date
+  if ($critique_begin == $critique_end) {
+    if (time() > $critique_begin) {
+      $active = TRUE;
+    }
+  }
+  // if there is an end date
+  else {
+    if (time() > $critique_begin && time() < $critique_end) {
+      $active = TRUE;
+    }
+  }
+
+  return $active;
+}

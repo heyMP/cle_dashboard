@@ -14,6 +14,21 @@
         </div>
       </div>
     </a>
+
+    <a href="{{assignment.critique.url}}" ng-repeat="assignment in data.assignments" ng-if="assignment.critique" ng-cloak>
+      <div class="collapsible-header">
+        <i class="material-icons">subdirectory_arrow_right</i>
+        <b>{{assignment.node_title}} Critique</b>
+        <i class="material-icons right-align">comment</i>
+        <div class="secondary-content">
+          <span class="chip" ng-if="assignment.active"> Active </span>
+        </div>
+        <div class="post-date">
+          <span> Due: </span>
+          <span ng-bind-html="assignment.field_field_critique_begin[0].rendered['#markup']"></span> &ndash; <span ng-bind-html="assignment.field_field_critique_end[0].rendered['#markup']"></span>
+        </div>
+      </div>
+    </a>
   </div>
 
   <div class="collection with-header">

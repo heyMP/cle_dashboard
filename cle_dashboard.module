@@ -82,6 +82,18 @@ function cle_dashboard_preprocess_cle_dashboard(&$variables) {
         }
       }
       $assignments[$result->nid]->active = $assignment_active;
+
+      // Find out if the Assignment has a critique
+      $critique = new stdClass();
+      $critique->active = FALSE;
+      $critique->url = '';
+      if (isset($result->field_field_cle_crit_type) && $type = $result->field_field_cle_crit_type) {
+        if ($type != 'No critique') {
+          $critique->active = TRUE;
+          $critique->url = base_path() . 'cle/critique/critique-peer/' . $result->nid . '?og_group_ref=' . $result->node_og_membership_nid;
+        }
+      }
+      $assignments[$result->nid]->critique = $critique;
     }
   }
 
